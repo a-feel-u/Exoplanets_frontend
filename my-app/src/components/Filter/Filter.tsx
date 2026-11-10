@@ -1,14 +1,10 @@
+
 import type { FormEvent } from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 
-import './Filter.css';
+import type { ExoplanetFilterType } from '../../slices/filterSlice';
 
-export type ExoplanetFilterType =
-  | 'all'
-  | 'nearby'
-  | 'distant'
-  | 'light'
-  | 'heavy';
+import './Filter.css';
 
 interface FilterProps {
   searchValue: string;
@@ -37,7 +33,6 @@ function Filter({
 
       {/* Поиск */}
       <Form onSubmit={handleSubmit}>
-
         <InputGroup className="filter-search">
 
           <Form.Control
@@ -55,7 +50,6 @@ function Filter({
           </Button>
 
         </InputGroup>
-
       </Form>
 
       {/* Фильтрация */}

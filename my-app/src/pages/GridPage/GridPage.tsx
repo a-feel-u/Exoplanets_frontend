@@ -1,31 +1,40 @@
-import { useMemo, useState } from 'react';
+
+import { useMemo } from 'react';
 
 import { EXOPLANETS_MOCK } from '../../modules/mock';
 
 import ExoplanetCard from '../../components/ExoplanetCard/ExoplanetCard';
+import Filter from '../../components/Filter/Filter';
 
-import Filter, {
-  type ExoplanetFilterType,
-} from '../../components/Filter/Filter';
+import {
+  applySearch,
+  setSearchValue,
+  setSelectedFilter,
+} from '../../slices/filterSlice';
+
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../app/hooks';
 
 import './GridPage.css';
 
 function GridPage() {
-  //текст введённый в поле поиска
-  const [searchValue, setSearchValue] = useState('');
+  // Получаем dispatch для отправки действий в Redux
+  const dispatch = useAppDispatch();
 
-  //применённый поисковый запрос
-  const [appliedSearch, setAppliedSearch] = useState('');
+  // Получаем значения фильтров из Redux Store
+  const {
+    searchValue,
+    appliedSearch,
+    selectedFilter,
+  } = useAppSelector((state) => state.filter);
 
-  //выбранное условие фильтрации
-  const [selectedFilter, setSelectedFilter] =
-    useState<ExoplanetFilterType>('all');
-
-  //отфильтрованный список
+  // Фильтруем mock-коллекцию
   const filteredExoplanets = useMemo(() => {
     return EXOPLANETS_MOCK.filter((exoplanet) => {
 
-      //поиск по названию и описанию
+      // Поиск по названию и описанию
       const normalizedSearch = appliedSearch.toLowerCase();
 
       const matchesSearch =
@@ -36,7 +45,7 @@ function GridPage() {
         return false;
       }
 
-      //фильтрация по характеристикам
+      // Фильтрация по характеристикам
       switch (selectedFilter) {
         case 'nearby':
           return exoplanet.distance <= 10;
@@ -56,21 +65,26 @@ function GridPage() {
     });
   }, [appliedSearch, selectedFilter]);
 
-  //применяем поисковый запрос
-  const handleSearchSubmit = () => {
-    setAppliedSearch(searchValue.trim());
-  };
-
   return (
     <div className="grid-page">
 
       {/* Компонент поиска и фильтрации */}
       <Filter
         searchValue={searchValue}
-        onSearchChange={setSearchValue}
+
+        onSearchChange={(value) =>
+          dispatch(setSearchValue(value))
+        }
+
         selectedFilter={selectedFilter}
-        onFilterChange={setSelectedFilter}
-        onSearchSubmit={handleSearchSubmit}
+
+        onFilterChange={(value) =>
+          dispatch(setSelectedFilter(value))
+        }
+
+        onSearchSubmit={() =>
+          dispatch(applySearch())
+        }
       />
 
       {/* Список карточек */}
