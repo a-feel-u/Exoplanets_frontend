@@ -1,0 +1,90 @@
+.exoplanet-filter {
+  padding: 12px 0 16px;
+}
+
+/* Строка поиска */
+
+.filter-search {
+  height: 46px;
+}
+
+.filter-search .form-control {
+  background: #333333;
+
+  color: #ffffff;
+
+  border: 1px solid #333333;
+  border-radius: 5px 0 0 5px;
+
+  font-size: 0.9rem;
+}
+
+.filter-search .form-control::placeholder {
+  color: #cccccc;
+}
+
+.filter-search .form-control:focus {
+  background: #333333;
+
+  color: #ffffff;
+
+  border-color: #f1d08b;
+
+  box-shadow: none;
+}
+
+.filter-search-button {
+  background: #ffffff;
+
+  color: #333333;
+
+  border: 2px solid #333333;
+
+  font-size: 0.85rem;
+
+  transition: 0.3s;
+}
+
+.filter-search-button:hover {
+  background: #333333;
+
+  color: #ffffff;
+
+  border-color: #333333;
+}
+
+/* Выпадающий список */
+
+.filter-select-group {
+  margin-top: 12px;
+}
+
+.filter-select-group .form-label {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #333333;
+
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.filter-select-group .form-select {
+  height: 42px;
+
+  background-color: #333333;
+
+  color: #ffffff;
+
+  border: 1px solid #333333;
+  border-radius: 5px;
+
+  font-size: 0.85rem;
+}
+
+.filter-select-group .form-select:focus {
+  border-color: #f1d08b;
+
+  box-shadow: none;
+}
