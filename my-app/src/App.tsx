@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Navigate, Routes, Route } from 'react-router-dom';
 
 import AppLayout from './components/AppLayout/AppLayout';
 
@@ -6,6 +6,7 @@ import FeedPage from './pages/FeedPage/FeedPage';
 import GridPage from './pages/GridPage/GridPage';
 import AddPage from './pages/AddPage/AddPage';
 import LoginPage from './pages/LoginPage/LoginPage';
+import { pagesMock } from './modules/runtime';
 
 function App() {
   return (
@@ -18,9 +19,9 @@ function App() {
 
         <Route path="/grid" element={<GridPage />} />
 
-        <Route path="/add" element={<AddPage />} />
+        <Route path="/add" element={pagesMock ? <Navigate to="/grid" replace /> : <AddPage />} />
 
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={pagesMock ? <Navigate to="/grid" replace /> : <LoginPage />} />
 
       </Route>
     </Routes>

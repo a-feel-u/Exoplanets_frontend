@@ -5,6 +5,7 @@ import { exoplanetsApi } from '../api/Api';
 import { bearerConfig, requestError } from '../api/auth';
 import type { RootState } from '../app/store';
 import { EXOPLANETS_MOCK } from '../modules/mock';
+import { pagesMock } from '../modules/runtime';
 import { readPlanetIds, setPlanetPreference } from '../modules/planetPreferences';
 import type { Exoplanet, PublishedExoplanet } from '../types/exoplanet';
 import type { ExoplanetFilterType } from './filterSlice';
@@ -41,6 +42,13 @@ async function loadCatalog(filters: CatalogFilters, user: RootState['user'], sig
   const weight = /^\d+(?:[.,]\d+)?$/.test(search) ? search.replace(',', '.') : undefined;
   const text = weight === undefined ? search.toLowerCase() : '';
   const canShow = (planet: Exoplanet) => matchesText(planet, text) && matchesCategory(planet, filters.filter);
+  const mockCatalog = () => ({
+      items: EXOPLANETS_MOCK.filter((planet) => canShow(planet) &&
+        (weight === undefined || planet.weight === Number(weight))),
+      source: 'mock' as const,
+    });
+  if (pagesMock) return mockCatalog();
+
   const config = { ...(user.isAuthenticated ? bearerConfig() : {}), signal, timeout: 6_000 };
 
   try {
@@ -56,11 +64,7 @@ async function loadCatalog(filters: CatalogFilters, user: RootState['user'], sig
     };
   } catch (error) {
     if (user.isAuthenticated || !serviceUnavailable(error)) throw error;
-    return {
-      items: EXOPLANETS_MOCK.filter((planet) => canShow(planet) &&
-        (weight === undefined || planet.weight === Number(weight))),
-      source: 'mock' as const,
-    };
+    return mockCatalog();
   }
 }
 

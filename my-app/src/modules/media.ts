@@ -1,7 +1,9 @@
+import { publicAsset } from './runtime';
+
 export function mediaUrl(value: string | undefined, fallback: string) {
   const source = value?.trim();
-  if (!source) return fallback;
-  if (source.startsWith('/')) return source;
+  if (!source) return publicAsset(fallback);
+  if (source.startsWith('/s3/') || source.startsWith('//')) return source;
 
   try {
     const url = new URL(source);
@@ -11,6 +13,6 @@ export function mediaUrl(value: string | undefined, fallback: string) {
     return source;
   } catch {
     // API может вернуть имя файла из public без начального слеша.
-    return `/${source}`;
+    return publicAsset(source);
   }
 }

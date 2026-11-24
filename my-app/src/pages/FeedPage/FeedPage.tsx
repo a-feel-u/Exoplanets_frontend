@@ -1,3 +1,4 @@
+import { publicAsset } from '../../modules/runtime';
 import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -108,7 +109,7 @@ function ExoplanetFeed({ id }: { id?: string }) {
 
           <div className="feed-stat">
             <img
-              src="/distance.PNG"
+              src={publicAsset('distance.PNG')}
               alt="Расстояние"
               className="feed-icon"
             />
@@ -124,7 +125,7 @@ function ExoplanetFeed({ id }: { id?: string }) {
 
           <div className="feed-stat">
             <img
-              src="/weight.PNG"
+              src={publicAsset('weight.PNG')}
               alt="Масса"
               className="feed-icon"
             />
@@ -149,7 +150,7 @@ function ExoplanetFeed({ id }: { id?: string }) {
                 like: !exoplanet.likedInBrowser,
               }))}
             >
-              <img src="/like.PNG" alt="" className="feed-icon" />
+              <img src={publicAsset('like.PNG')} alt="" className="feed-icon" />
               <span>{exoplanet.likes_number ?? 0}</span>
             </button>
           )}
@@ -162,7 +163,7 @@ function ExoplanetFeed({ id }: { id?: string }) {
             aria-label="Следующая экзопланета"
           >
             <img
-              src="/next.PNG"
+              src={publicAsset('next.PNG')}
               alt="Следующая"
               className="feed-next-icon"
             />

@@ -1,3 +1,4 @@
+import { pagesMock, publicAsset } from '../../modules/runtime';
 import { Nav, Navbar } from 'react-bootstrap';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
@@ -43,24 +44,25 @@ function BottomNavbar() {
           className={`bottom-navbar-link ${isFeedActive ? 'active' : ''}`}
         >
           <img
-            src="/main.PNG"
+            src={publicAsset('main.PNG')}
             alt="Лента"
             className="bottom-navbar-image"
           />
         </Nav.Link>
 
-        {/* Добавление */}
-        <Nav.Link
-          as={NavLink}
-          to="/add"
-          className="bottom-navbar-link"
-        >
-          <img
-            src="/plus.PNG"
-            alt="Добавление"
-            className="bottom-navbar-image"
-          />
-        </Nav.Link>
+        {!pagesMock && (
+          <Nav.Link
+            as={NavLink}
+            to="/add"
+            className="bottom-navbar-link"
+          >
+            <img
+              src={publicAsset('plus.PNG')}
+              alt="Добавление"
+              className="bottom-navbar-image"
+            />
+          </Nav.Link>
+        )}
 
         {/* Плитка */}
         <Nav.Link
@@ -69,20 +71,20 @@ function BottomNavbar() {
           className="bottom-navbar-link"
         >
           <img
-            src="/cards.PNG"
+            src={publicAsset('cards.PNG')}
             alt="Плитка"
             className="bottom-navbar-image"
           />
         </Nav.Link>
 
-        {isAuthenticated ? (
-          <Nav.Link as="button" type="button" className="bottom-navbar-link" onClick={handleSignOut}>
-            <img src="/logout.PNG" alt="" className="bottom-navbar-image" />
+        {pagesMock ? null : isAuthenticated ? (
+          <Nav.Link as="button" type="button" className="bottom-navbar-link" onClick={handleSignOut} aria-label="Выход">
+            <img src={publicAsset('logout.PNG')} alt="" className="bottom-navbar-image" />
             
           </Nav.Link>
         ) : (
-          <Nav.Link as={NavLink} to="/login" className="bottom-navbar-link">
-            <img src="/user.PNG" alt="" className="bottom-navbar-image" />
+          <Nav.Link as={NavLink} to="/login" aria-label="Вход" className="bottom-navbar-link">
+            <img src={publicAsset('user.PNG')} alt="" className="bottom-navbar-image" />
             
           </Nav.Link>
         )}

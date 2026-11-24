@@ -1,3 +1,4 @@
+import { publicAsset } from '../../modules/runtime';
 import { useEffect, useState, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 
@@ -68,7 +69,7 @@ function PublishForm({ draft }: { draft: Exoplanet }) {
         <div>
           <strong>Видео:</strong>
           <video src={mediaUrl(draft.video, '/DefaultVideo.mp4')}
-            poster={draft.video ? undefined : '/base_video.PNG'} muted autoPlay loop playsInline />
+            poster={draft.video ? undefined : publicAsset('base_video.PNG')} muted autoPlay loop playsInline />
         </div>
       </div>
       <label htmlFor="planet-title">Планета:</label>
