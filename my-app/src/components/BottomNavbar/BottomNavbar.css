@@ -84,3 +84,7 @@
   font-size: 32px;
   color: #ffffff;
 }
+button.bottom-navbar-link {
+  border: 0;
+  background: transparent;
+}

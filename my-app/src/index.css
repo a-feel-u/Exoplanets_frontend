@@ -53,3 +53,11 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
 }
+.request-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1100;
+  display: grid;
+  place-content: center;
+  background: rgb(0 0 0 / 38%);
+}

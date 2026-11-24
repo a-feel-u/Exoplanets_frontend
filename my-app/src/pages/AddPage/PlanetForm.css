@@ -1,0 +1,68 @@
+.planet-form {
+  padding: 16px 16px 80px;
+  color: #333;
+}
+
+.planet-form h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.planet-form label,
+.planet-previews strong {
+  display: block;
+  font-size: 1.18rem;
+  font-weight: 700;
+}
+
+.planet-form input:not([type='file']),
+.planet-form textarea {
+  display: block;
+  width: 100%;
+  min-height: 39px;
+  margin-top: 4px;
+  border: 1px solid #333;
+  border-radius: 3px;
+  background: #333;
+  color: #f5d48c;
+}
+
+.planet-form textarea {
+  line-height: 1.2;
+}
+
+.planet-form button,
+.planet-form input::file-selector-button {
+  min-width: 144px;
+  padding: 6px 9px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #333;
+  background: #fff;
+}
+
+.planet-form input[type='file'] {
+  display: block;
+  max-width: 100%;
+}
+
+.planet-form input::file-selector-button {
+  margin-inline-end: 10px;
+}
+
+.planet-form button {
+  margin-top: 13px;
+}
+
+.planet-previews {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.planet-previews img,
+.planet-previews video {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}

@@ -1,10 +1,31 @@
 import { Nav, Navbar } from 'react-bootstrap';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
+import { requestError, signOut } from '../../api/auth';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { resetFilters } from '../../slices/filterSlice';
+import { clearAuthenticatedUser, finishAuthRequest, startAuthRequest } from '../../slices/userSlice';
 import './BottomNavbar.css';
 
 function BottomNavbar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { isAuthenticated, isLoading } = useAppSelector((state) => state.user);
+
+  async function handleSignOut() {
+    if (isLoading) return;
+    dispatch(startAuthRequest());
+    try {
+      await signOut();
+      dispatch(resetFilters());
+      dispatch(clearAuthenticatedUser());
+      dispatch(finishAuthRequest(null));
+      navigate('/grid');
+    } catch (error) {
+      dispatch(finishAuthRequest(requestError(error)));
+    }
+  }
 
   const isFeedActive =
     location.pathname === '/' ||
@@ -30,7 +51,8 @@ function BottomNavbar() {
 
         {/* Добавление */}
         <Nav.Link
-          disabled
+          as={NavLink}
+          to="/add"
           className="bottom-navbar-link"
         >
           <img
@@ -53,17 +75,17 @@ function BottomNavbar() {
           />
         </Nav.Link>
 
-        {/* Вход */}
-        <Nav.Link
-          disabled
-          className="bottom-navbar-link"
-        >
-          <img
-            src="/user.PNG"
-            alt="Вход"
-            className="bottom-navbar-image"
-          />
-        </Nav.Link>
+        {isAuthenticated ? (
+          <Nav.Link as="button" type="button" className="bottom-navbar-link" onClick={handleSignOut}>
+            <img src="/logout.PNG" alt="" className="bottom-navbar-image" />
+            
+          </Nav.Link>
+        ) : (
+          <Nav.Link as={NavLink} to="/login" className="bottom-navbar-link">
+            <img src="/user.PNG" alt="" className="bottom-navbar-image" />
+            
+          </Nav.Link>
+        )}
 
       </Nav>
     </Navbar>

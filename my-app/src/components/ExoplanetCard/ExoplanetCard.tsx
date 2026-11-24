@@ -1,19 +1,21 @@
 import { Button, Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
+import { mediaUrl } from '../../modules/media';
 import type { Exoplanet } from '../../types/exoplanet';
 
 import './ExoplanetCard.css';
 
 interface ExoplanetCardProps {
   exoplanet: Exoplanet;
+  onDelete?: () => void;
 }
 
-function ExoplanetCard({ exoplanet }: ExoplanetCardProps) {
+function ExoplanetCard({ exoplanet, onDelete }: ExoplanetCardProps) {
   const navigate = useNavigate();
 
   //изображение по умолчанию задается, если exoplanet.image ноль
-  const imageSrc = exoplanet.image || '/DefaultImage.png';
+  const imageSrc = mediaUrl(exoplanet.image, '/DefaultImage.png');
 
   const handleDetailsClick = () => {
     navigate(`/feed/${exoplanet.id}`);
@@ -61,6 +63,11 @@ function ExoplanetCard({ exoplanet }: ExoplanetCardProps) {
           Подробнее
         </Button>
 
+        {onDelete && (
+          <Button className="mt-2" variant="outline-light" onClick={onDelete}>
+            Удалить
+          </Button>
+        )}
       </Card.Body>
 
     </Card>

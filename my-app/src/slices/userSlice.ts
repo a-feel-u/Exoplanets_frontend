@@ -2,6 +2,8 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 interface UserState {
   isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
   userId: number | null;
   login: string | null;
 }
@@ -13,6 +15,8 @@ interface AuthenticatedUser {
 
 const initialState: UserState = {
   isAuthenticated: false,
+  isLoading: false,
+  error: null,
   userId: null,
   login: null,
 };
@@ -22,6 +26,14 @@ const userSlice = createSlice({
   initialState,
 
   reducers: {
+    startAuthRequest(state) {
+      state.isLoading = true;
+      state.error = null;
+    },
+    finishAuthRequest(state, action: PayloadAction<string | null>) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
     // Устанавливаем авторизованного пользователя
     setAuthenticatedUser(
       state,
@@ -42,6 +54,8 @@ const userSlice = createSlice({
 });
 
 export const {
+  startAuthRequest,
+  finishAuthRequest,
   setAuthenticatedUser,
   clearAuthenticatedUser,
 } = userSlice.actions;

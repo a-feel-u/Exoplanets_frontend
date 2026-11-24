@@ -5,6 +5,7 @@ import AppLayout from './components/AppLayout/AppLayout';
 import FeedPage from './pages/FeedPage/FeedPage';
 import GridPage from './pages/GridPage/GridPage';
 import AddPage from './pages/AddPage/AddPage';
+import LoginPage from './pages/LoginPage/LoginPage';
 
 function App() {
   return (
@@ -18,6 +19,8 @@ function App() {
         <Route path="/grid" element={<GridPage />} />
 
         <Route path="/add" element={<AddPage />} />
+
+        <Route path="/login" element={<LoginPage />} />
 
       </Route>
     </Routes>

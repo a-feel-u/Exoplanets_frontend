@@ -2,40 +2,35 @@ import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { EXOPLANETS_MOCK } from '../../modules/mock';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { mediaUrl } from '../../modules/media';
+import { getExoplanetFeed, likeExoplanet, selectExoplanetsLoading } from '../../slices/exoplanetsSlice';
 
 import './FeedPage.css';
 
-function FeedPage() {
-  const { id } = useParams();
+function ExoplanetFeed({ id }: { id?: string }) {
   const navigate = useNavigate();
 
   const [isDescriptionExpanded, setIsDescriptionExpanded] =
     useState(false);
 
-  //определяем индекс выбранной экзопланеты
-  const selectedIndex = id
-    ? EXOPLANETS_MOCK.findIndex(
-        (planet) => planet.id === Number(id)
-      )
-    : 0;
+  const dispatch = useAppDispatch();
+  const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
+  const { catalog, planet: exoplanet } = useAppSelector((state) => state.exoplanets.feed);
+  const isLoading = useAppSelector(selectExoplanetsLoading);
+  const error = useAppSelector((state) => state.exoplanets.error);
 
-  //если ID некорректный показываем первую экзопланету
-  const currentIndex = selectedIndex >= 0 ? selectedIndex : 0;
-
-  //получаем выбранную экзопланету
-  const exoplanet = EXOPLANETS_MOCK[currentIndex];
-
-  //изображение по умолчанию
-  const imageSrc = exoplanet.image || '/DefaultImage.png';
-
-  //видео по умолчанию
-  const videoSrc = exoplanet.video || '/DefaultVideo.mp4';
-
-  //сбрасываем раскрытие описания при переключении планет
   useEffect(() => {
-    setIsDescriptionExpanded(false);
-  }, [id]);
+    const request = dispatch(getExoplanetFeed(id === undefined ? undefined : Number(id)));
+    return () => request.abort();
+  }, [dispatch, id, isAuthenticated]);
+
+  if (!exoplanet) {
+    return !isLoading && !error ? <p className="p-3">Экзопланеты не найдены.</p> : null;
+  }
+
+  const imageSrc = mediaUrl(exoplanet.image, '/DefaultImage.png');
+  const videoSrc = mediaUrl(exoplanet.video, '/DefaultVideo.mp4');
 
   //ограничение длины описания
   const descriptionLimit = 120;
@@ -50,12 +45,9 @@ function FeedPage() {
 
   //переход к следующей экзопланете
   const handleNext = () => {
-    const nextIndex =
-      (currentIndex + 1) % EXOPLANETS_MOCK.length;
-
-    const nextExoplanet = EXOPLANETS_MOCK[nextIndex];
-
-    navigate(`/feed/${nextExoplanet.id}`);
+    const currentIndex = catalog.findIndex((planet) => planet.id === exoplanet.id);
+    const next = catalog[(currentIndex + 1) % catalog.length];
+    if (next) navigate(`/feed/${next.id}`);
   };
 
   return (
@@ -146,6 +138,22 @@ function FeedPage() {
             </span>
           </div>
 
+          {isAuthenticated && (
+            <button
+              type="button"
+              className="feed-next-button feed-like-button"
+              aria-label={exoplanet.likedInBrowser ? 'Снять лайк' : 'Поставить лайк'}
+              aria-pressed={Boolean(exoplanet.likedInBrowser)}
+              onClick={() => void dispatch(likeExoplanet({
+                id: exoplanet.id,
+                like: !exoplanet.likedInBrowser,
+              }))}
+            >
+              <img src="/like.PNG" alt="" className="feed-icon" />
+              <span>{exoplanet.likes_number ?? 0}</span>
+            </button>
+          )}
+
           {/* Следующая экзопланета */}
           <button
             type="button"
@@ -168,4 +176,7 @@ function FeedPage() {
   );
 }
 
-export default FeedPage;
+export default function FeedPage() {
+  const { id } = useParams();
+  return <ExoplanetFeed key={id ?? 'first'} id={id} />;
+}

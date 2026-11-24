@@ -1,7 +1,7 @@
 
-import { useMemo } from 'react';
+import { useEffect } from 'react';
 
-import { EXOPLANETS_MOCK } from '../../modules/mock';
+import { deleteExoplanet, getExoplanets, selectExoplanetsLoading } from '../../slices/exoplanetsSlice';
 
 import ExoplanetCard from '../../components/ExoplanetCard/ExoplanetCard';
 import Filter from '../../components/Filter/Filter';
@@ -30,40 +30,15 @@ function GridPage() {
     selectedFilter,
   } = useAppSelector((state) => state.filter);
 
-  // Фильтруем mock-коллекцию
-  const filteredExoplanets = useMemo(() => {
-    return EXOPLANETS_MOCK.filter((exoplanet) => {
+  const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
+  const filteredExoplanets = useAppSelector((state) => state.exoplanets.items);
+  const error = useAppSelector((state) => state.exoplanets.error);
+  const isLoading = useAppSelector(selectExoplanetsLoading);
 
-      // Поиск по названию и описанию
-      const normalizedSearch = appliedSearch.toLowerCase();
-
-      const matchesSearch =
-        exoplanet.title.toLowerCase().includes(normalizedSearch) ||
-        exoplanet.description.toLowerCase().includes(normalizedSearch);
-
-      if (!matchesSearch) {
-        return false;
-      }
-
-      // Фильтрация по характеристикам
-      switch (selectedFilter) {
-        case 'nearby':
-          return exoplanet.distance <= 10;
-
-        case 'distant':
-          return exoplanet.distance > 10;
-
-        case 'light':
-          return exoplanet.weight < 1;
-
-        case 'heavy':
-          return exoplanet.weight >= 1;
-
-        default:
-          return true;
-      }
-    });
-  }, [appliedSearch, selectedFilter]);
+  useEffect(() => {
+    const request = dispatch(getExoplanets({ search: appliedSearch, filter: selectedFilter }));
+    return () => request.abort();
+  }, [dispatch, appliedSearch, selectedFilter, isAuthenticated]);
 
   return (
     <div className="grid-page">
@@ -97,13 +72,18 @@ function GridPage() {
             <ExoplanetCard
               key={exoplanet.id}
               exoplanet={exoplanet}
+              onDelete={isAuthenticated && exoplanet.canDelete ? () => {
+                if (window.confirm(`Удалить «${exoplanet.title}»?`)) {
+                  void dispatch(deleteExoplanet(exoplanet.id));
+                }
+              } : undefined}
             />
 
           ))}
 
         </div>
 
-      ) : (
+      ) : !isLoading && !error ? (
 
         <div className="grid-empty">
           <h5>Ничего не найдено</h5>
@@ -113,7 +93,7 @@ function GridPage() {
           </p>
         </div>
 
-      )}
+      ) : null}
 
     </div>
   );

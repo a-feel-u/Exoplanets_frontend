@@ -217,3 +217,11 @@
     0 2px 4px rgba(0, 0, 0, 0.5)
   );
 }
+.feed-like-button {
+  gap: 0.3rem;
+  color: #fff;
+}
+
+.feed-like-button[aria-pressed='true'] {
+  color: #ffd783;
+}

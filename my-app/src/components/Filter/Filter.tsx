@@ -37,7 +37,8 @@ function Filter({
 
           <Form.Control
             type="text"
-            placeholder="Введите название или описание"
+            placeholder="Название или точная масса"
+            aria-label="Поиск по названию, описанию или точной массе"
             value={searchValue}
             onChange={(event) => onSearchChange(event.target.value)}
           />
